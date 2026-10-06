@@ -5,7 +5,7 @@
 👩‍🏫 LEKTOŘI  → jména, popisy a obrázky
 📚 KURZY      → názvy, popisy a ceny
 🛍️ PRODUKTY   → názvy, obrázky, popisy a ceny
-💳 PŘEDPLATNÉ → Start / Plus / Premium
+💳 JEDNORÁZOVÉ NÁKUPY → kurzy a produkty
 📧 OBJEDNÁVKY → ORDER_EMAIL níže
 ⭐ RECENZE    → žádné ukázkové recenze; začíná se od nuly
 
@@ -25,8 +25,7 @@ const lecturers = [
   {id:1,name:"Maru",emoji:"👩‍🏫",bio:"Matematika a čeština pro mladší školáky. Vysvětluje krok za krokem a bez zbytečného stresu.",tags:["Matematika","Čeština","1.–5. třída"]},
   {id:2,name:"Verča",emoji:"👩‍🏫",bio:"Pomáhá dětem s domácími úkoly, čtením a základy angličtiny. Ráda používá hry a příklady z běžného života.",tags:["Čeština","Angličtina","1.–5. třída"]},
   {id:3,name:"Jana",emoji:"🧑‍🏫",bio:"Specializuje se na matematiku a systematickou přípravu na přijímací zkoušky.",tags:["Matematika","Přijímačky","Procvičování"]},
-  {id:4,name:"Amy",emoji:"👩‍🏫",bio:"Pomáhá s angličtinou a češtinou a vede žáky k tomu, aby se nebáli zeptat.",tags:["Angličtina","Čeština","1.–5. třída"]},
-{name:"Anička", role:"Lektorka"}
+  {id:4,name:"Amy",emoji:"👩‍🏫",bio:"Pomáhá s angličtinou a češtinou a vede žáky k tomu, aby se nebáli zeptat.",tags:["Angličtina","Čeština","1.–5. třída"]}
 ];
 
 const courses = [
@@ -35,7 +34,7 @@ const courses = [
   {id:"c3",type:"1-5",title:"Angličtina pro školáky",desc:"Základní slovíčka, věty a krátká konverzace pro děti.",price:249,emoji:"🇬🇧",rating:0,reviews:0,lecturer:"Verča",subscription:"Plus"},
   {id:"c4",type:"prijimacky",title:"Přijímačky – matematika",desc:"Strukturované procvičování typových úloh a strategie řešení.",price:399,emoji:"🎯",rating:0,reviews:0,lecturer:"Jana",subscription:"Plus"},
   {id:"c5",type:"prijimacky",title:"Přijímačky – čeština",desc:"Porozumění textu, gramatika a systematická příprava.",price:399,emoji:"📝",rating:0,reviews:0,lecturer:"Verča",subscription:"Plus"},
-  {id:"c6",type:"prijimacky",title:"Kompletní přijímačkový balíček",desc:"Matematika + čeština + bonusové materiály a kontrolní testy.",price:699,emoji:"🏆",rating:0,reviews:0,lecturer:"Jana + Verča",subscription:"Premium"}
+  {id:"c6",type:"prijimacky",title:"Kompletní přijímačkový balíček",desc:"Matematika + čeština + bonusové materiály a kontrolní testy.",price:699,emoji:"🏆",rating:0,reviews:0,lecturer:"Jana + Veru",subscription:"Premium"}
 ];
 
 const products = [
@@ -55,7 +54,7 @@ const materialSets = {
     {icon:"📘",title:"Základy matematiky",desc:"Procvičování základních početních operací.",locked:false},
     {icon:"📝",title:"Český jazyk – pravopis",desc:"Krátká cvičení pro 1.–5. třídu.",locked:false},
     {icon:"🎲",title:"Hravé procvičování",desc:"Mini aktivity, které můžete vytisknout.",locked:false},
-    {icon:"🔒",title:"Rozšířené testy",desc:"Dostupné od předplatného Plus.",locked:true}
+    {icon:"🔒",title:"Rozšířené testy",desc:"Rozšířené procvičování.",locked:true}
   ],
   Plus: [
     {icon:"📘",title:"Základy matematiky",desc:"Procvičování základních početních operací.",locked:false},
@@ -244,7 +243,7 @@ function renderMaterials(){
   const sub=state.user.subscription||"Start";
   const mats=materialSets[sub]||materialSets.Start;
   box.innerHTML=`<div class="materials-wrap">
-    <div class="subscription-card"><div><span class="eyebrow">Aktivní předplatné</span><h2>${sub}</h2><p>${sub==="Start"?"Základní materiály pro 1.–5. třídu.":sub==="Plus"?"Rozšířené materiály a příprava na přijímačky.":"Kompletní přístup ke všem materiálům."}</p></div><button class="btn secondary" onclick="openSubscriptions()">Změnit předplatné</button></div>
+    <div class="subscription-card"><div><span class="eyebrow">Vaše materiály</span><h2>${sub}</h2><p>${sub==="Start"?"Základní materiály pro 1.–5. třídu.":sub==="Plus"?"Rozšířené materiály a příprava na přijímačky.":"Kompletní přístup ke všem materiálům."}</p></div><button class="btn secondary" onclick="openSubscriptions()">Změnit předplatné</button></div>
     <div class="material-grid">${mats.map(m=>`<article class="material ${m.locked?"locked":""}"><div class="material-icon">${m.icon}</div><h3>${m.title}</h3><p>${m.desc}</p>${m.locked?'<span class="lock-note">🔒 Odemkne vyšší předplatné</span>':'<button class="small-btn light" onclick="showToast(\'Materiál je připraven k otevření – napoj zde vlastní PDF/odkaz.\')">Otevřít materiál</button>'}</article>`).join("")}</div>
   </div>`
 }
@@ -287,7 +286,7 @@ function submitAuth(e,mode){
 function logout(){state.user=null;save();updateHeader();renderMaterials();closeModal();showToast("Byli jste odhlášeni.")}
 function account(){
   if(!state.user){openAuth("login");return}
-  showModal(`<button class="modal-close" onclick="closeModal()">×</button><h2>👤 Můj účet</h2><p><b>${state.user.name}</b><br><span class="muted">${state.user.email}</span></p><div class="subscription-card"><div><b>Aktivní předplatné</b><p>${state.user.subscription}</p></div><button class="btn secondary" onclick="openSubscriptions()">Změnit</button></div><button class="btn secondary full" onclick="logout()">Odhlásit se</button>`)
+  showModal(`<button class="modal-close" onclick="closeModal()">×</button><h2>👤 Můj účet</h2><p><b>${state.user.name}</b><br><span class="muted">${state.user.email}</span></p><div class="subscription-card"><div><b>Vaše materiály</b><p>${state.user.subscription}</p></div><button class="btn secondary" onclick="openSubscriptions()">Změnit</button></div><button class="btn secondary full" onclick="logout()">Odhlásit se</button>`)
 }
 function openSubscriptions(){
   showModal(`<button class="modal-close" onclick="closeModal()">×</button><h2>Vyberte předplatné</h2><div style="display:grid;gap:12px">${["Start","Plus","Premium"].map((s,i)=>`<div class="subscription-card" style="margin:0"><div><b>${s}</b><p>${i===0?"Základy a 1.–5. třída":i===1?"Rozšířený obsah + přijímačky":"Všechny materiály a testy"}</p></div><button class="btn ${state.user?.subscription===s?"secondary":"primary"}" onclick="selectSubscription('${s}')">${state.user?.subscription===s?"Aktivní":"Vybrat"}</button></div>`).join("")}</div>`)
@@ -478,16 +477,41 @@ async function refreshCourseReviewsInModal(id){
 }
 
 function openCourse(id){
-  const c=courses.find(x=>x.id===id), rr=calcCourseRating(c), reviews=allReviews(id);
-  showModal(`<button class="modal-close" onclick="closeModal()">×</button><span class="eyebrow">${c.type==="prijimacky"?"PŘIJÍMAČKY":"1.–5. TŘÍDA"}</span><h2>${c.emoji} ${c.title}</h2><p class="muted">${c.desc}</p>
-    <div class="rating" style="font-size:18px"><span>${stars(rr.rating)}</span><b>${rr.rating.toFixed(1).replace(".",",")}</b><small>${rr.count} hodnocení</small></div>
-    <div class="review-list">${reviews.length?reviews.map(r=>`<div class="review"><div class="review-head"><b>${escapeHtml(r.name)}</b><span class="review-stars">${stars(r.rating)}</span></div><p style="margin:5px 0">${escapeHtml(r.text)}</p><small>Ověřený uživatel webu</small></div>`).join(""):`<div class="review"><p>Zatím zde nejsou vaše vlastní recenze. Buďte první!</p></div>`}</div>
-    ${state.user?`<form class="form" style="margin-top:18px" onsubmit="submitReview(event,'${c.id}')"><label>Vaše hodnocení<select name="rating"><option value="5">★★★★★ – 5</option><option value="4">★★★★☆ – 4</option><option value="3">★★★☆☆ – 3</option><option value="2">★★☆☆☆ – 2</option><option value="1">★☆☆☆☆ – 1</option></select></label><label>Recenze<textarea name="text" required rows="3" placeholder="Co se vám na kurzu líbilo?"></textarea></label><button class="btn primary">Přidat recenzi</button></form>`:`<button class="btn primary full" style="margin-top:18px" onclick="closeModal();openAuth('login')">Přihlásit se pro přidání recenze</button>`}
-    <button class="btn secondary full" style="margin-top:10px" onclick="addToCart('${c.id}','course')">Přidat kurz do košíku • ${eur(c.price)}</button>`)
+  const c=courses.find(x=>x.id===id);
+  if(!c) return;
+  const localRating=calcCourseRating(c);
+  showModal(`<button class="modal-close" onclick="closeModal()">×</button>
+    <span class="eyebrow">${c.type==="prijimacky"?"PŘIJÍMAČKY":"1.–5. TŘÍDA"}</span>
+    <h2>${c.emoji} ${c.title}</h2>
+    <p class="muted">${c.desc}</p>
+    <div class="rating" style="font-size:18px"><span id="serverCourseStars">${stars(localRating.rating)}</span><b id="serverCourseAverage">${localRating.rating.toFixed(1).replace(".",",")}</b><small id="serverCourseCount">${localRating.count} hodnocení</small></div>
+    <div class="review-list"><div class="review"><p>Načítám veřejné recenze…</p></div></div>
+    ${state.user?`<form class="form" style="margin-top:18px" onsubmit="submitReview(event,'${c.id}')"><label>Vaše hodnocení<select name="rating"><option value="5">★★★★★ – 5</option><option value="4">★★★★☆ – 4</option><option value="3">★★★☆☆ – 3</option><option value="2">★★☆☆☆ – 2</option><option value="1">★☆☆☆☆ – 1</option></select></label><label>Recenze<textarea name="text" required maxlength="1000" rows="3" placeholder="Co se vám na kurzu líbilo?"></textarea></label><button class="btn primary">Přidat recenzi</button></form>`:`<button class="btn primary full" style="margin-top:18px" onclick="closeModal();openAuth('login')">Přihlásit se pro přidání recenze</button>`}
+    <button class="btn secondary full" style="margin-top:10px" onclick="addToCart('${c.id}','course')">Přidat kurz do košíku • ${eur(c.price)}</button>`);
   refreshCourseReviewsInModal(id);
 }
-
-async function submitReview(e,id){e.preventDefault();const fd=new FormData(e.target);try{const response=await fetch("/api/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({courseId:id,authorName:state.user?.name||"Uživatel",rating:Number(fd.get("rating")),text:String(fd.get("text")||"").trim()})});const data=await response.json();if(!response.ok)throw new Error(data.error||"Recenzi se nepodařilo uložit.");await refreshCourseReviewsInModal(id);renderCourses();renderHome();showToast("Děkujeme za recenzi!")}catch(err){showToast(err.message)}}
+async function submitReview(e,id){
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  try{
+    const response = await fetch("/api/reviews", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        courseId:id,
+        authorName:state.user?.name || "Uživatel",
+        rating:Number(fd.get("rating")),
+        text:String(fd.get("text") || "").trim()
+      })
+    });
+    const data = await response.json();
+    if(!response.ok) throw new Error(data.error || "Recenzi se nepodařilo odeslat.");
+    await refreshCourseReviewsInModal(id);
+    showToast("Děkujeme za recenzi!");
+  }catch(err){
+    showToast(err.message);
+  }
+}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function openTerms(){showModal(`<button class="modal-close" onclick="closeModal()">×</button><h2>Obchodní podmínky – vzor</h2><p class="muted">Toto je pouze návrh textu pro demo. Před spuštěním skutečného e-shopu je potřeba doplnit skutečné identifikační údaje, podmínky plateb, dopravy, reklamací, odstoupení od smlouvy a zásady ochrany osobních údajů.</p><p>Pro reálný provoz doporučujeme právní kontrolu podmínek a napojení zabezpečené autentizace, databáze a platební brány.</p>`)}
 function route(){

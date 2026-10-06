@@ -82,3 +82,15 @@ footer{background:#172033;color:#dce2f0;padding:50px max(22px,calc((100% - 1136p
 .reservation-slot small{color:#666}
 .success-box{text-align:center;padding:12px 4px}
 .error{color:#b42318}
+
+/* Přehlednější zobrazení recenzí a termínů */
+#reservationSlots .slot-card, #reservationSlots .reservation-slot, #reservationSlots .card {
+  border: 1px solid var(--line, #dce4ee);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 10px 0;
+  background: var(--surface, #fff);
+}
+#reservationSlots button { margin-top: 8px; }
+.review-list .review { padding: 12px 0; border-bottom: 1px solid var(--line, #e5e7eb); }
+.review-list .review:last-child { border-bottom: 0; }
